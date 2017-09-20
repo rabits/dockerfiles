@@ -37,7 +37,7 @@ COPY extract-qt-installer.sh /tmp/qt/
 
 # Download & unpack Qt 5.9 toolchains & clean
 RUN curl -Lo /tmp/qt/installer.run 'http://download.qt-project.org/official_releases/qt/5.9/5.9.1/qt-opensource-linux-x64-5.9.1.run' \
-    && chmod +x /tmp/qt/extract-qt-installer.sh && QT_CI_PACKAGES=qt.591.gcc_64 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
+    && QT_CI_PACKAGES=qt.591.gcc_64 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
     && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name 5.9.1 -exec rm -r "{}" \; \
     && rm -rf /tmp/qt
 

@@ -4,6 +4,7 @@ Qt toolchain images
 * qt:5.4-desktop
 * qt:5.4-android
 * qt:5.9-desktop
+* qt:5.9-android
 
 Usage:
 ------
