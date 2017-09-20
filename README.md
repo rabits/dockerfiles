@@ -3,6 +3,7 @@ Qt toolchain images
 
 * qt:5.4-desktop
 * qt:5.4-android
+* qt:5.9-desktop
 
 Usage:
 ------
@@ -42,3 +43,8 @@ make install INSTALL_ROOT=$HOME/dist
   ```sh
 androiddeployqt --input ~/src/<android json> --output ~/dist --deployment bundled --gradle --release
 ```
+
+Links
+-----
+
+Used extract-qt script from https://github.com/benlau/qtci/blob/master/bin/extract-qt-installer
