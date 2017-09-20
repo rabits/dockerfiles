@@ -52,7 +52,7 @@ COPY extract-qt-installer.sh /tmp/qt/
 # Download & unpack Qt 5.9 toolchains & clean
 RUN curl -Lo /tmp/qt/installer.run 'http://download.qt-project.org/official_releases/qt/5.9/5.9.1/qt-opensource-linux-x64-5.9.1.run' \
     && QT_CI_PACKAGES=qt.591.android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
-    && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name 5.9.1 -exec rm -r "{}" \; \
+    && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name '5.*' -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
     && rm -rf /tmp/qt
 
 # Download & unpack android SDK

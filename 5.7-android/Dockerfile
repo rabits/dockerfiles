@@ -6,7 +6,7 @@ MAINTAINER Rabit <home@rabits.org> (@rabits)
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV QT_PATH /opt/Qt
-ENV QT_ANDROID ${QT_PATH}/5.7.1/android_armv7
+ENV QT_ANDROID ${QT_PATH}/5.7/android_armv7
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV ANDROID_SDK_ROOT ${ANDROID_HOME}
 ENV ANDROID_NDK_ROOT /opt/android-ndk
@@ -51,8 +51,8 @@ COPY extract-qt-installer.sh /tmp/qt/
 
 # Download & unpack Qt 5.7 toolchains & clean
 RUN curl -Lo /tmp/qt/installer.run 'http://download.qt-project.org/official_releases/qt/5.7/5.7.1/qt-opensource-linux-x64-android-5.7.1.run' \
-    && QT_CI_PACKAGES=qt.571.android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
-    && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name 5.7.1 -exec rm -r "{}" \; \
+    && QT_CI_PACKAGES=qt.57.android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
+    && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name '5.*' -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
     && rm -rf /tmp/qt
 
 # Download & unpack android SDK
