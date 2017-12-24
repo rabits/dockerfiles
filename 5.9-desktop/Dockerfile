@@ -4,9 +4,11 @@
 FROM ubuntu:16.04
 MAINTAINER Rabit <home@rabits.org> (@rabits)
 
+ARG QT_VERSION=5.9.3
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV QT_PATH /opt/Qt
-ENV QT_DESKTOP $QT_PATH/5.9.1/gcc_64
+ENV QT_DESKTOP $QT_PATH/${QT_VERSION}/gcc_64
 ENV PATH $QT_DESKTOP/bin:$PATH
 
 # Install updates & requirements:
@@ -15,7 +17,7 @@ ENV PATH $QT_DESKTOP/bin:$PATH
 #  * curl - to download Qt bundle
 #  * build-essential, pkg-config, libgl1-mesa-dev - basic Qt build requirements
 #  * libsm6, libice6, libxext6, libxrender1, libfontconfig1, libdbus-1-3 - dependencies of the Qt bundle run-file
-RUN apt-get -qq update && apt-get -qq dist-upgrade && apt-get install -qq -y --no-install-recommends \
+RUN apt update && apt full-upgrade && apt install -y --no-install-recommends \
     git \
     openssh-client \
     ca-certificates \
@@ -35,10 +37,10 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && apt-get install -qq -y --n
 
 COPY extract-qt-installer.sh /tmp/qt/
 
-# Download & unpack Qt 5.9 toolchains & clean
-RUN curl -Lo /tmp/qt/installer.run 'http://download.qt-project.org/official_releases/qt/5.9/5.9.1/qt-opensource-linux-x64-5.9.1.run' \
-    && QT_CI_PACKAGES=qt.591.gcc_64 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
-    && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name '5.*' -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
+# Download & unpack Qt toolchains & clean
+RUN curl -Lo /tmp/qt/installer.run "https://download.qt-project.org/official_releases/qt/$(echo "${QT_VERSION}" | cut -d. -f 1-2)/${QT_VERSION}/qt-opensource-linux-x64-${QT_VERSION}.run" \
+    && QT_CI_PACKAGES=qt.$(echo "${QT_VERSION}" | tr -d .).gcc_64 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
+    && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name "${QT_VERSION}" -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
     && rm -rf /tmp/qt
 
 # Reconfigure locale

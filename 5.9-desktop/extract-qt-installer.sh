@@ -48,8 +48,8 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
         widget.deselectAll();
         for (var i in packages) {
             var pkg = trim(packages[i]);
-	    console.log("Select " + pkg);
-	    widget.selectComponent(pkg);
+            console.log("Select " + pkg);
+            widget.selectComponent(pkg);
         }
     } else {
        console.log("Use default component list");

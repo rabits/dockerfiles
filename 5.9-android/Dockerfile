@@ -4,28 +4,36 @@
 FROM ubuntu:16.04
 MAINTAINER Rabit <home@rabits.org> (@rabits)
 
+ARG QT_VERSION=5.9.3
+ARG NDK_VERSION=r16b
+ARG SDK_PLATFORM=android-21
+ARG SDK_BUILD_TOOLS=21.1.2
+ARG SDK_PACKAGES="tools platform-tools"
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV QT_PATH /opt/Qt
-ENV QT_ANDROID ${QT_PATH}/5.9.1/android_armv7
-ENV ANDROID_HOME /opt/android-sdk-linux
+ENV QT_ANDROID ${QT_PATH}/${QT_VERSION}/android_armv7
+ENV ANDROID_HOME /opt/android-sdk
 ENV ANDROID_SDK_ROOT ${ANDROID_HOME}
 ENV ANDROID_NDK_ROOT /opt/android-ndk
 ENV ANDROID_NDK_TOOLCHAIN_PREFIX arm-linux-androideabi
 ENV ANDROID_NDK_TOOLCHAIN_VERSION 4.9
 ENV ANDROID_NDK_HOST linux-x86_64
-ENV ANDROID_NDK_PLATFORM android-21
+ENV ANDROID_NDK_PLATFORM #{SDK_PLATFORM}
 ENV ANDROID_NDK_TOOLS_PREFIX ${ANDROID_NDK_TOOLCHAIN_PREFIX}
 ENV QMAKESPEC android-g++
-ENV PATH ${PATH}:${QT_ANDROID}/bin:${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+ENV PATH ${QT_ANDROID}/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
 
 # Install updates & requirements:
+#  * unzip - unpack platform tools
 #  * git, openssh-client, ca-certificates - clone & build
 #  * locales, sudo - useful to set utf-8 locale & sudo usage
 #  * curl - to download Qt bundle
 #  * make, default-jdk, ant - basic build requirements
 #  * libsm6, libice6, libxext6, libxrender1, libfontconfig1, libdbus-1-3 - dependencies of Qt bundle run-file
 #  * libc6:i386, libncurses5:i386, libstdc++6:i386, libz1:i386 - dependencides of android sdk binaries
-RUN dpkg --add-architecture i386 && apt-get -qq update && apt-get -qq dist-upgrade && apt-get install -qq -y --no-install-recommends \
+RUN dpkg --add-architecture i386 && apt update && apt full-upgrade && apt install -y --no-install-recommends \
+    unzip \
     git \
     openssh-client \
     ca-certificates \
@@ -49,20 +57,20 @@ RUN dpkg --add-architecture i386 && apt-get -qq update && apt-get -qq dist-upgra
 
 COPY extract-qt-installer.sh /tmp/qt/
 
-# Download & unpack Qt 5.9 toolchains & clean
-RUN curl -Lo /tmp/qt/installer.run 'http://download.qt-project.org/official_releases/qt/5.9/5.9.1/qt-opensource-linux-x64-5.9.1.run' \
-    && QT_CI_PACKAGES=qt.591.android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
-    && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name '5.*' -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
+# Download & unpack Qt toolchains & clean
+RUN curl -Lo /tmp/qt/installer.run "https://download.qt-project.org/official_releases/qt/$(echo "${QT_VERSION}" | cut -d. -f 1-2)/${QT_VERSION}/qt-opensource-linux-x64-${QT_VERSION}.run" \
+    && QT_CI_PACKAGES=qt.$(echo "${QT_VERSION}" | tr -d .).android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
+    && find "${QT_PATH}" -mindepth 1 -maxdepth 1 ! -name "${QT_VERSION}" -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
     && rm -rf /tmp/qt
 
 # Download & unpack android SDK
-RUN mkdir /tmp/android && curl -Lo /tmp/android/sdk.tgz 'http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz' \
-    && tar --no-same-owner -xf /tmp/android/sdk.tgz -C /opt \
-    && rm -rf /tmp/android && echo "y" | android update sdk -u -a -t tools,platform-tools,build-tools-21.1.2,$ANDROID_NDK_PLATFORM
+RUN curl -Lo /tmp/sdk-tools.zip 'https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip' \
+    && mkdir -p /opt/android-sdk && unzip /tmp/sdk-tools.zip -d /opt/android-sdk && rm -f /tmp/sdk-tools.zip \
+    && yes | sdkmanager --licenses && sdkmanager --verbose "platforms;${SDK_PLATFORM}" "build-tools;${SDK_BUILD_TOOLS}" ${SDK_PACKAGES}
 
 # Download & unpack android NDK
-RUN mkdir /tmp/android && cd /tmp/android && curl -Lo ndk.bin 'http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin' \
-    && chmod +x ndk.bin && ./ndk.bin > /dev/null && mv android-ndk-r10e $ANDROID_NDK_ROOT && chmod -R +rX $ANDROID_NDK_ROOT \
+RUN mkdir /tmp/android && cd /tmp/android && curl -Lo ndk.zip "https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux-x86_64.zip" \
+    && unzip ndk.zip && mv android-ndk-* $ANDROID_NDK_ROOT && chmod -R +rX $ANDROID_NDK_ROOT \
     && rm -rf /tmp/android
 
 # Reconfigure locale
