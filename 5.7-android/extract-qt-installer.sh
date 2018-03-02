@@ -27,7 +27,7 @@ function Controller() {
 
 Controller.prototype.WelcomePageCallback = function() {
     console.log("Welcome Page");
-    gui.clickButton(buttons.NextButton);
+    gui.clickButton(buttons.NextButton, 3000);
 }
 
 Controller.prototype.CredentialsPageCallback = function() {
@@ -48,8 +48,8 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
         widget.deselectAll();
         for (var i in packages) {
             var pkg = trim(packages[i]);
-	    console.log("Select " + pkg);
-	    widget.selectComponent(pkg);
+            console.log("Select " + pkg);
+            widget.selectComponent(pkg);
         }
     } else {
        console.log("Use default component list");

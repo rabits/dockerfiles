@@ -27,7 +27,7 @@ function Controller() {
 
 Controller.prototype.WelcomePageCallback = function() {
     console.log("Welcome Page");
-    gui.clickButton(buttons.NextButton);
+    gui.clickButton(buttons.NextButton, 3000);
 }
 
 Controller.prototype.CredentialsPageCallback = function() {
