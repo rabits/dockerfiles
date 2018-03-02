@@ -32,7 +32,7 @@ ENV PATH ${QT_ANDROID}/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${AND
 #  * make, default-jdk, ant - basic build requirements
 #  * libsm6, libice6, libxext6, libxrender1, libfontconfig1, libdbus-1-3 - dependencies of Qt bundle run-file
 #  * libc6:i386, libncurses5:i386, libstdc++6:i386, libz1:i386 - dependencides of android sdk binaries
-RUN dpkg --add-architecture i386 && apt update && apt full-upgrade && apt install -y --no-install-recommends \
+RUN dpkg --add-architecture i386 && apt update && apt full-upgrade -y && apt install -y --no-install-recommends \
     unzip \
     git \
     openssh-client \

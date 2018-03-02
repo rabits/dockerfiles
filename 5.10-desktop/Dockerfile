@@ -17,7 +17,7 @@ ENV PATH $QT_DESKTOP/bin:$PATH
 #  * curl - to download Qt bundle
 #  * build-essential, pkg-config, libgl1-mesa-dev - basic Qt build requirements
 #  * libsm6, libice6, libxext6, libxrender1, libfontconfig1, libdbus-1-3 - dependencies of the Qt bundle run-file
-RUN apt update && apt full-upgrade && apt install -y --no-install-recommends \
+RUN apt update && apt full-upgrade -y && apt install -y --no-install-recommends \
     git \
     openssh-client \
     ca-certificates \
