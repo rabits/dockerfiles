@@ -4,7 +4,7 @@
 FROM ubuntu:16.04
 MAINTAINER Rabit <home@rabits.org> (@rabits)
 
-ARG QT_VERSION=5.10.0
+ARG QT_VERSION=5.10.1
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV QT_PATH /opt/Qt
