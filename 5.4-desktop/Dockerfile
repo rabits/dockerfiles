@@ -32,7 +32,7 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && apt-get install -qq -y --n
 
 # Download & unpack Qt 5.4 toolchains & clean
 RUN mkdir -p /tmp/qt \
-    && curl -Lo /tmp/qt/installer.run 'http://download.qt-project.org/official_releases/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run' \
+    && curl -Lo /tmp/qt/installer.run 'http://download.qt.io/official_releases/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run' \
     && chmod 755 /tmp/qt/installer.run && /tmp/qt/installer.run --dump-binary-data -o /tmp/qt/data \
     && mkdir $QT_PATH && cd $QT_PATH \
     && 7zr x /tmp/qt/data/qt.54.gcc_64/5.4.2-0qt5_essentials.7z > /dev/null \
