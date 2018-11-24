@@ -4,8 +4,8 @@
 FROM ubuntu:16.04
 MAINTAINER Rabit <home@rabits.org> (@rabits)
 
-ARG QT_VERSION=5.11.0
-ARG NDK_VERSION=r16b
+ARG QT_VERSION=5.11.2
+ARG NDK_VERSION=r17b
 ARG SDK_PLATFORM=android-21
 ARG SDK_BUILD_TOOLS=21.1.2
 ARG SDK_PACKAGES="tools platform-tools"
