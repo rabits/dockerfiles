@@ -11,6 +11,8 @@ Qt toolchain images
 * qt:5.10-android
 * qt:5.11-desktop
 * qt:5.11-android
+* qt:5.12-desktop
+* qt:5.12-android
 
 Usage:
 ------
