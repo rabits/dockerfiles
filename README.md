@@ -18,6 +18,18 @@ Qt toolchain images
 * qt:5.13-android-arm64
 * qt:5.14-desktop
 * qt:5.14-android
+* qt:5.15-desktop
+* qt:5.15-android
+
+## Purpose:
+
+Repo contains dockerfiles and required scripts to automate your opensource Qt app CI. Nowdays Qt
+folks making it harder to use their builds of Qt toolchain, but it's still possible, so hopefully
+this repo will help you as much as it helps me.
+
+It's not updating frequently (usually only minor releases) and probably will not fit your advanced
+needs, but will show a way to organize your automation. If you want to help with changes - you are
+always welcome.
 
 ## Usage:
 
@@ -59,7 +71,7 @@ Qt toolchain images
     docker$ cmake --build .
     ```
 
-## Build the container image 5.14
+## Build the container image 5.14 and further ones
 
 Qt changed their policy - and requires to enter the login/password during the installation. To securely pass those creds
 you can use the next way:
@@ -80,7 +92,7 @@ you can use the next way:
 4. While http server is running - run the docker build command (you can check the docker network to get the host IP):
     ```
     $ cd 5.14-android
-    $ docker build --rm=true --build-arg 'QT_CI_ENV_URL=http://172.17.0.1:8765/secrets.env' -t YOUR_LOGIN/qt:$(basename "${PWD}") .
+    $ docker build --pull --rm=true --build-arg 'QT_CI_ENV_URL=http://172.17.0.1:8765/secrets.env' -t YOUR_LOGIN/qt:$(basename "${PWD}") .
     ```
 5. Done - your Qt image is ready.
 
