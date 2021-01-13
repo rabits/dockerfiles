@@ -106,4 +106,4 @@ Controller.prototype.FinishedPageCallback = function() {
 EOF
 
 chmod u+x $INSTALLER
-QT_QPA_PLATFORM=minimal $INSTALLER -v --script $SCRIPT
+QT_QPA_PLATFORM=minimal $INSTALLER -v --proxy --script $SCRIPT
