@@ -4,7 +4,7 @@
 FROM ubuntu:18.04
 MAINTAINER Rabit <home@rabits.org> (@rabits)
 
-ARG QT_VERSION=5.12.0
+ARG QT_VERSION=5.12.10
 ARG NDK_VERSION=r18b
 ARG SDK_PLATFORM=android-21
 ARG SDK_BUILD_TOOLS=21.1.2
@@ -48,6 +48,7 @@ RUN dpkg --add-architecture i386 && apt update && apt full-upgrade -y && apt ins
     libice6 \
     libxext6 \
     libxrender1 \
+    libxkbcommon-x11-0 \
     libfontconfig1 \
     libdbus-1-3 \
     libx11-xcb1 \
@@ -62,7 +63,7 @@ COPY extract-qt-installer.sh /tmp/qt/
 
 # Download & unpack Qt toolchains & clean
 RUN curl -Lo /tmp/qt/installer.run "https://download.qt.io/official_releases/qt/$(echo "${QT_VERSION}" | cut -d. -f 1-2)/${QT_VERSION}/qt-opensource-linux-x64-${QT_VERSION}.run" \
-    && QT_CI_PACKAGES=qt.qt5.$(echo "${QT_VERSION}" | tr -d .).android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
+    && QT_CI_PACKAGES=qt.qt5.$(echo "${QT_VERSION}" | tr -d .).android_armv7 http_proxy=http://127.0.0.1 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
     && find "${QT_PATH}" -mindepth 1 -maxdepth 1 ! -name "${QT_VERSION}" -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
     && rm -rf /tmp/qt
 

@@ -44,13 +44,40 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
     var widget = gui.currentPageWidget();
 
     var packages = trim("$PACKAGES").split(",");
+    console.log("Required packages: " + packages)
     if (packages.length > 0 && packages[0] !== "") {
+        var components = installer.components();
+        console.log("Available components: " + components.length);
+        var pkgs = ["Packages: "];
+        for (var i = 0; i < components.length; i++) {
+            pkgs.push(components[i].name);
+        }
+        console.log(pkgs.join(" "));
+
         widget.deselectAll();
+        var pkgs_error = false;
         for (var i in packages) {
             var pkg = trim(packages[i]);
-            console.log("Select " + pkg);
-            widget.selectComponent(pkg);
+            if (pkgs.indexOf(pkg) != -1) {
+                console.log("Select " + pkg);
+                widget.selectComponent(pkg);
+            } else {
+                console.log("ERROR: Unable to find " + pkg + " in the packages list");
+                pkgs_error = true;
+            }
         }
+        if (pkgs_error) {
+            gui.clickButton(buttons.CancelButton);
+            return;
+        }
+
+        components = installer.components();
+        pkgs = ["Packages to install: "];
+        for (var i = 0; i < components.length; i++) {
+            if (components[i].installationRequested())
+                pkgs.push(components[i].name);
+        }
+        console.log(pkgs.join(" "));
     } else {
        console.log("Use default component list");
     }

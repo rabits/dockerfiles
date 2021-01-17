@@ -55,6 +55,7 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
     var widget = gui.currentPageWidget();
 
     var packages = trim("$PACKAGES").split(",");
+    console.log("Required packages: " + packages)
     if (packages.length > 0 && packages[0] !== "") {
         var components = installer.components();
         console.log("Available components: " + components.length);
@@ -68,11 +69,11 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
         var pkgs_error = false;
         for (var i in packages) {
             var pkg = trim(packages[i]);
-            if (pkgs.includes(pkg)) {
+            if (pkgs.indexOf(pkg) != -1) {
                 console.log("Select " + pkg);
                 widget.selectComponent(pkg);
             } else {
-                console.log("Unable to find " + pkg + " in the packages list");
+                console.log("ERROR: Unable to find " + pkg + " in the packages list");
                 pkgs_error = true;
             }
         }

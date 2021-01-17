@@ -83,7 +83,7 @@ you can use the next way:
     ```
 2. Run simple http server to serve the secrets.env file, for example execute python command in the same folder:
     ```
-    $ python -m SimpleHTTPServer 8765
+    $ python3 -m http.server 8765
     ```
 3. Check the file is available:
     ```

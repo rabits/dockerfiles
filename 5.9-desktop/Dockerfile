@@ -4,7 +4,7 @@
 FROM ubuntu:16.04
 MAINTAINER Rabit <home@rabits.org> (@rabits)
 
-ARG QT_VERSION=5.9.5
+ARG QT_VERSION=5.9.9
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV QT_PATH /opt/Qt
@@ -39,7 +39,7 @@ COPY extract-qt-installer.sh /tmp/qt/
 
 # Download & unpack Qt toolchains & clean
 RUN curl -Lo /tmp/qt/installer.run "https://download.qt.io/official_releases/qt/$(echo "${QT_VERSION}" | cut -d. -f 1-2)/${QT_VERSION}/qt-opensource-linux-x64-${QT_VERSION}.run" \
-    && QT_CI_PACKAGES=qt.$(echo "${QT_VERSION}" | tr -d .).gcc_64 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
+    && QT_CI_PACKAGES=qt.qt5.$(echo "${QT_VERSION}" | tr -d .).gcc_64 http_proxy=http://127.0.0.1 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
     && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name "${QT_VERSION}" -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
     && rm -rf /tmp/qt
 
