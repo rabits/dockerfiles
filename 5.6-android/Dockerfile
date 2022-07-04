@@ -1,12 +1,12 @@
 # Minimal docker container to build project
-# Image: rabits/qt:5.7-android
+# Image: rabits/qt:5.6-android
 
 FROM ubuntu:16.04
 MAINTAINER Rabit <home@rabits.org> (@rabits)
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV QT_PATH /opt/Qt
-ENV QT_ANDROID ${QT_PATH}/5.7/android_armv7
+ENV QT_ANDROID ${QT_PATH}/5.6/android_armv7
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV ANDROID_SDK_ROOT ${ANDROID_HOME}
 ENV ANDROID_NDK_ROOT /opt/android-ndk
@@ -49,9 +49,9 @@ RUN dpkg --add-architecture i386 && apt-get -qq update && apt-get -qq dist-upgra
 
 COPY extract-qt-installer.sh /tmp/qt/
 
-# Download & unpack Qt 5.7 toolchains & clean
-RUN curl -Lo /tmp/qt/installer.run 'https://download.qt.io/new_archive/qt/5.7/5.7.1/qt-opensource-linux-x64-android-5.7.1.run' \
-    && QT_CI_PACKAGES=qt.57.android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
+# Download & unpack Qt 5.6 toolchains & clean
+RUN curl -Lo /tmp/qt/installer.run 'https://download.qt.io/new_archive/qt/5.6/5.6.3/qt-opensource-linux-x64-android-5.6.3.run' \
+    && QT_CI_PACKAGES=qt.563.android_armv7 /tmp/qt/extract-qt-installer.sh /tmp/qt/installer.run "$QT_PATH" \
     && find "$QT_PATH" -mindepth 1 -maxdepth 1 ! -name '5.*' -exec echo 'Cleaning Qt SDK: {}' \; -exec rm -r '{}' \; \
     && rm -rf /tmp/qt
 
